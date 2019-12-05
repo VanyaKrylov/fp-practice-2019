@@ -26,7 +26,12 @@ gcd x y = let
 
 -- существует ли полный целочисленный квадрат в диапазоне [from, to)?
 doesSquareBetweenExist :: Integer -> Integer -> Bool
-doesSquareBetweenExist from to = todo
+doesSquareBetweenExist from to = solut from to 1
+    where 
+        solut from to toggle 
+          | toggle >= from && toggle < to = True
+          | toggle < from                 = solut from to ((toggle+1)^2)
+          | toggle >= to                  = False
 
 -- является ли дата корректной с учётом количества дней в месяце и
 -- вискокосных годов?
@@ -41,7 +46,12 @@ pow x y = x * pow x (y-1)
 
 -- является ли данное число простым?
 isPrime :: Integer -> Bool
-isPrime x = todo
+isPrime x = solut x (x-1)
+    where 
+        solut x 1 = True 
+        solut x d 
+            | mod x d == 0 = False
+            | otherwise    = solut x (d-1)
 
 type Point2D = (Double, Double)
 
