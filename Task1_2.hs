@@ -4,7 +4,7 @@ module Task1_2 where
   Задание 1.2
   Необходимо реализовать четыре любые функции в данном файле
 -}
-
+import Prelude hiding (pow, gcd)
 import Todo(todo)
 
 -- синус числа (формула Тейлора)
@@ -17,7 +17,12 @@ cos x = todo
 
 -- наибольший общий делитель двух чисел
 gcd :: Integer -> Integer -> Integer
-gcd x y = todo
+gcd x 0 = x
+gcd x y = let 
+              smaller = min x y
+              bigger  = max x y
+          in 
+              gcd smaller $ mod bigger smaller
 
 -- существует ли полный целочисленный квадрат в диапазоне [from, to)?
 doesSquareBetweenExist :: Integer -> Integer -> Bool
@@ -31,7 +36,8 @@ isDateCorrect day month year = todo
 -- возведение числа в степень, duh
 -- готовые функции и плавающую арифметику использовать нельзя
 pow :: Integer -> Integer -> Integer
-pow x y = todo
+pow x 1 = x
+pow x y = x * pow x (y-1)
 
 -- является ли данное число простым?
 isPrime :: Integer -> Bool
