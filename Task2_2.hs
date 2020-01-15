@@ -7,6 +7,7 @@ module Task2_2 where
 -}
 
 import Todo(todo)
+import Data.List
 
 import Prelude hiding (foldl, foldr, unfoldr, map, concatMap,
     filter, maxBy, minBy, reverse, sum, product, elem)

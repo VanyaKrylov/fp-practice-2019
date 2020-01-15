@@ -7,22 +7,37 @@ module Task2_1 where
 -}
 
 import Todo(todo)
+import Prelude hiding (lookup)
 
 -- Ассоциативный массив на основе бинарного дерева поиска
 -- Ключи - Integer, значения - произвольного типа
-data TreeMap v = ChangeMe
-
+data TreeMap v = EmptyTree
+				| Leaf{k :: Integer, val :: v}
+				| Node{k :: Integer, val :: v, l :: TreeMap v, r :: TreeMap v}
+				deriving(Show,Eq)
 -- Пустое дерево
 emptyTree :: TreeMap v
-emptyTree = todo
+emptyTree = EmptyTree
 
 -- Содержится ли заданный ключ в дереве?
 contains :: TreeMap v -> Integer -> Bool
-contains t k = todo
+contains EmptyTree 	_ 	= False
+contains Leaf {k = key} k 	= key == k 
+contains Node {k=key,l=left, r=right} k
+	| k == key = True
+	| k > key  = contains right k
+	| k < key  = contains left k
 
 -- Значение для заданного ключа
 lookup :: Integer -> TreeMap v -> v
-lookup k t = todo
+lookup k EmptyTree	  = error "Empty tree"
+lookup k (Leaf key val) 
+	| key == k  = val
+	| otherwise = error "No such key"
+lookup k Node {k=key, val=v, l=left, r=right}
+	| k == key = v
+	| k > key  = lookup k right
+	| k < key  = lookup k left
 
 -- Вставка пары (ключ, значение) в дерево
 insert :: (Integer, v) -> TreeMap v -> TreeMap v
@@ -47,3 +62,16 @@ listFromTree t = todo
 -- Поиск k-той порядковой статистики дерева
 kMean :: Integer -> TreeMap v -> (Integer, v)
 kMean i t = todo
+
+rep :: a -> [a]
+rep x = x : rep x
+
+lt = Leaf 1 1.22
+lt2 = Leaf 2 2.22
+lt3 = Leaf 3 3.22
+lt4 = Leaf 4 3.22
+lt5 = Leaf 5 5.22
+lt6 = Leaf 6 6.22
+n5 = Node 5 5.22 lt4 lt6 
+n3 = Node 3 3.22 lt2 n5 
+n1 = Node 1 1.22 emptyTree n3 
