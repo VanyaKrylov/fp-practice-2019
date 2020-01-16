@@ -53,19 +53,32 @@ insert nv@(k, v) Node {k=key, val=val, l=left, r=right}
 	
 -- Удаление элемента по ключу
 remove :: Integer -> TreeMap v -> TreeMap v
-remove k (Leaf key val) 
+remove k EmptyTree = EmptyTree
+remove k lea@(Leaf key val) 
 	| k == key  = emptyTree
-	| otherwise = error "No such Element"
-remove k (Node key val ln rn) 
-	| key == k  = undefined
-	| otherwise =
+	| otherwise = lea
+remove k node@(Node key val ln rn) 
+	| k == key = 
 		case (ln, rn) of
-			(Leaf {k = lkey}, EmptyTree) -> if lkey == k 
-											 then Leaf key val
-											 else error "No Such Element"
-			(EmptyTree, Leaf {k = lkey}) -> if lkey == k 
-											 then Leaf key val
-										 else error "No Such Element"
+			(ln, EmptyTree) -> ln
+			(_, _)			-> (Node nkey nval ln (remove nkey rn))
+				where
+					minK = foldr1 min . map fst . listFromTree $ rn
+					nkey = minK
+					nval = lookup minK rn
+				
+	| k > key  =
+		case (ln, rn) of
+			(EmptyTree, lf@Leaf{k = lkey}) -> if lkey == k 
+											  then Leaf key val
+											  else lf
+			(_		  , _				 ) -> node{r = remove k rn}
+	| k < key  =
+		case (ln, rn) of
+			(lf@Leaf{k = lkey}, EmptyTree) -> if lkey == k 
+											  then Leaf key val
+											  else lf
+			(_				  , _		 ) -> node{l = remove k ln}
 remove _ _     = undefined
 
 -- Поиск ближайшего снизу ключа относительно заданного
@@ -74,22 +87,24 @@ nearestLE i t = todo
 
 -- Построение дерева из списка пар
 treeFromList :: [(Integer, v)] -> TreeMap v
-treeFromList lst = todo
+treeFromList lst = foldr insert EmptyTree lst
 
 -- Построение списка пар из дерева
 listFromTree :: TreeMap v -> [(Integer, v)]
-listFromTree t = todo
+listFromTree EmptyTree        = []
+listFromTree (Leaf k val)     = [(k,val)]
+listFromTree (Node k val l r) = [(k,val)] ++ (listFromTree l) ++ (listFromTree r)
 
 -- Поиск k-той порядковой статистики дерева
 kMean :: Integer -> TreeMap v -> (Integer, v)
 kMean i t = todo
 
-lt = Leaf 1 1.22
-lt2 = Leaf 2 2.22
-lt3 = Leaf 3 3.22
-lt4 = Leaf 4 3.22
-lt5 = Leaf 5 5.22
-lt6 = Leaf 6 6.22
-n5 = Node 5 5.22 lt4 lt6 
-n3 = Node 3 3.22 lt2 n5 
-n1 = Node 1 1.22 emptyTree n3 
+lt = Leaf 1 7.22
+lt2 = Leaf 2 "2.22"
+lt3 = Leaf 3 "3.22"
+lt4 = Leaf 4 "4.22"
+lt5 = Leaf 5 "5.22"
+lt6 = Leaf 6 "6.22"
+n5 = Node 5 "5.22" lt4 lt6 
+n3 = Node 3 "3.22" lt2 n5 
+n1 = Node 1 "1.22" emptyTree n3 
