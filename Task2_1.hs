@@ -41,8 +41,16 @@ lookup k Node {k=key, val=v, l=left, r=right}
 
 -- Вставка пары (ключ, значение) в дерево
 insert :: (Integer, v) -> TreeMap v -> TreeMap v
-insert (k, v) t = todo
-
+insert (k, v) EmptyTree = Leaf k v
+insert (k, v) (Leaf key val)
+	| k == key = Leaf k v
+	| k > key  = Node key val EmptyTree (Leaf k v) 
+	| k < key  = Node key val (Leaf k v) EmptyTree
+insert nv@(k, v) Node {k=key, val=val, l=left, r=right}
+	| k == key = Node k v left right 
+	| k > key  = Node key val left (insert nv right)
+	| k < key  = Node key val (insert nv left) right
+	
 -- Удаление элемента по ключу
 remove :: Integer -> TreeMap v -> TreeMap v
 remove i t = todo
@@ -62,9 +70,6 @@ listFromTree t = todo
 -- Поиск k-той порядковой статистики дерева
 kMean :: Integer -> TreeMap v -> (Integer, v)
 kMean i t = todo
-
-rep :: a -> [a]
-rep x = x : rep x
 
 lt = Leaf 1 1.22
 lt2 = Leaf 2 2.22
