@@ -53,7 +53,20 @@ insert nv@(k, v) Node {k=key, val=val, l=left, r=right}
 	
 -- Удаление элемента по ключу
 remove :: Integer -> TreeMap v -> TreeMap v
-remove i t = todo
+remove k (Leaf key val) 
+	| k == key  = emptyTree
+	| otherwise = error "No such Element"
+remove k (Node key val ln rn) 
+	| key == k  = undefined
+	| otherwise =
+		case (ln, rn) of
+			(Leaf {k = lkey}, EmptyTree) -> if lkey == k 
+											 then Leaf key val
+											 else error "No Such Element"
+			(EmptyTree, Leaf {k = lkey}) -> if lkey == k 
+											 then Leaf key val
+										 else error "No Such Element"
+remove _ _     = undefined
 
 -- Поиск ближайшего снизу ключа относительно заданного
 nearestLE :: Integer -> TreeMap v -> (Integer, v)
