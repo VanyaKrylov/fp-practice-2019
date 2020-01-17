@@ -91,17 +91,18 @@ nearestLE i (Leaf k v)
 nearestLE i (Node k v l r) 
 	| i >= k = Just (k, v)
 	| i < k  = nearestLE i l 
-	
+
+-- Альтернативная реализация через представление дерева в виде списка
 nearestLE' :: Integer -> TreeMap v -> Maybe(Integer, v)
 nearestLE' i t = res
 	where
 		list      = listFromTree t
 		f z (x,y) = (x-z, y)
 		keyVal    = treeListMin (filter (\x -> (>=0) . fst $ x) (map (f i) list))
-		res = 
+		res       = 
 			case keyVal of
 				Nothing     -> keyVal
-				Just(x1,y1) -> Just(x1 + i, y1)--value 	  = lookup key t
+				Just(x1,y1) -> Just(x1 + i, y1)
 
 treeListMin :: [(Integer, v)] -> Maybe(Integer, v)
 treeListMin tl = func tl Nothing

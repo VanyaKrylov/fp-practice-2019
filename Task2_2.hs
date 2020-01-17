@@ -7,19 +7,29 @@ module Task2_2 where
 -}
 
 import Todo(todo)
-import Data.List
 
 import Prelude hiding (foldl, foldr, unfoldr, map, concatMap,
     filter, maxBy, minBy, reverse, sum, product, elem)
 
 foldl :: (b -> a -> b) -> b -> [a] -> b
-foldl = todo
+foldl f i []     = i
+foldl f i [x]   = f i x
+foldl f i (x:xs) = foldl f i xs `f` x
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
-foldr = todo
+foldr f i []     = i
+foldr f i [x]    = f x i
+foldr f i (x:xs) = x `f` foldr f i xs
 
-unfoldr :: (b -> Maybe (a, b)) -> b -> [a]
-unfoldr = todo
+unfoldr :: (b -> Maybe(a, b)) -> b -> [a]
+unfoldr f i = 
+    case f i of
+        Nothing   -> []
+        Just(x,y) -> x : unfoldr f y
+
+unfoldrInf :: (b -> (a, b)) -> b -> [a]
+unfoldrInf f i = [el] ++ (unfoldrInf f base) 
+    where (el,base) = f i 
 
 -- Сумма всех элементов списка (пример)
 sum :: [Integer] -> Integer
@@ -31,7 +41,7 @@ reverse lst = foldl f [] lst where f t h = h:t
 
 -- Отображение элементов списка
 map :: (a -> b) -> [a] -> [b]
-map = todo
+map f lst = foldr ((:) . f) [] lst 
 
 -- Произведение всех элементов списка
 product :: [Integer] -> Integer
