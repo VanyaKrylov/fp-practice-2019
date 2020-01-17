@@ -45,11 +45,16 @@ map f lst = foldr ((:) . f) [] lst
 
 -- Произведение всех элементов списка
 product :: [Integer] -> Integer
-product = todo
+product = foldr (*) 1
 
 -- Выделение из списка Maybe всех существующих значений
 catMaybes :: [Maybe a] -> [a]
-catMaybes = todo
+catMaybes = foldl func [] 
+	where
+		func x1 x2 = 
+			case x2 of 
+				Just val -> val : x1
+				Nothing -> x1
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
