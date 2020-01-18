@@ -58,25 +58,28 @@ catMaybes = foldl func []
 
 -- Диагональ матрицы
 diagonal :: [[a]] -> [a]
-diagonal = todo
+diagonal = unfoldr (\x -> if null x then Nothing else Just(head . head $ x, tail (map tail x)))
 
 -- Фильтр для всех элементов, не соответствующих предикату
 filterNot :: (a -> Bool) -> [a] -> [a]
-filterNot = todo
+filterNot p = foldr (\x y -> if not . p $ x then x:y else y) []
 
 -- Поиск элемента в списке
 elem :: (Eq a) => a -> [a] -> Bool
-elem = todo
+elem el lst = foldr (\x y -> if x == el then True else y) False lst 
 
 -- Список чисел в диапазоне [from, to) с шагом step
 rangeTo :: Integer -> Integer -> Integer -> [Integer]
-rangeTo from to step = todo
+rangeTo from to step = unfoldr (\x -> if x >= from && x < to then Just(x,x+step) else Nothing) from
 
 -- Конкатенация двух списков
 append :: [a] -> [a] -> [a]
-append = todo
+append x y = foldr (:) y x
 
 -- Разбиение списка lst на куски размером n
 -- (последний кусок может быть меньше)
 groups :: [a] -> Integer -> [[a]]
-groups lst n = todo
+groups lst n = func lst nInt 
+	where
+		func lst nInt = unfoldr (\x -> if null x then Nothing else Just(take nInt x, drop nInt x)) lst
+		nInt 		  = fromIntegral n
