@@ -11,3 +11,5 @@ module Task4_1 where
 data FunMonad a = FunMonad { fun :: String -> a }
 
 -- реализуйте классы `Functor`, `Applicative` и `Monad` для типа `FunMonad`
+instance Functor FunMonad where
+    fmap f (FunMonad fu) = FunMonad (f . fu)
