@@ -5,6 +5,7 @@ module Task3_1 where
   Числа Пеано: представление чисел на основе нуля и операций "+1" и "-1".
   Необходимо реализовать все классы типов, характерные для целых чисел.
 -}
+import Data.Ratio 
 
 data WeirdPeanoNumber = Zero | Succ WeirdPeanoNumber | Pred WeirdPeanoNumber
 
@@ -78,9 +79,19 @@ instance Num WeirdPeanoNumber where
         | otherwise = Pred Zero
     
     fromInteger int = toEnum . fromIntegral $ int 
-    
+ 
+instance Real WeirdPeanoNumber where
+    toRational n = (toInteger . fromEnum $ n) % 1 
 
-
+instance Integral WeirdPeanoNumber where
+	quotRem a Zero = error "Division by Zero"
+	quotRem a b    = (,) (toEnum q) r
+		where
+			intB = fromEnum b
+			q    = div (fromEnum a) intB
+			r    = (-) a (toEnum (q * intB))
+			
+	toInteger a = toInteger $ fromEnum a
 
 
 
