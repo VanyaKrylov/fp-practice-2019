@@ -16,7 +16,10 @@ instance Functor FourOf where
 
 instance Applicative FourOf where
     pure x = FourOf x x x x
-    (<*>) (FourOf fa fb fc fd) (FourOf a b c d) = FourOf (fa a) (fb b) (fc c) (fd d)  
+    (<*>) (FourOf fa fb fc fd) m = FourOf (fi $ fmap fa m)
+                                                           (sn $ fmap fb m) 
+                                                           (th $ fmap fc m) 
+                                                           (fo $ fmap fd m)  
     
 {- FourOf 1 2 3 4 >>= \x ->
    FourOf 4 6 7 8 >>= \y ->

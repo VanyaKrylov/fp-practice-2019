@@ -36,5 +36,3 @@ instance Monad FunMonad where
          -> (a -> FunMonad (String -> b))
          -> FunMonad (String -> b)
          -}
---func :: (a -> b) -> (b -> b) -> a -> b
---func f ff a = case f a of x -> ff x
